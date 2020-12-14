@@ -1,0 +1,564 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "addressSpaces": {
+            "type": "array",
+            "defaultValue": [
+                "10.0.0.0/16"
+            ],
+            "metadata": {
+                "description": "The address space prefixes for the VNet"
+            }
+        },
+        "adminEmail": {
+            "type": "string",
+            "metadata": {
+                "description": "The email address of the admin user"
+            }
+        },
+        "adminUsername": {
+            "type": "string",
+            "metadata": {
+                "description": "The username for the admin user"
+            }
+        },
+        "adminPassword": {
+            "type": "securestring",
+            "metadata": {
+                "description": "The password the admin user"
+            }
+        },
+        "adminRepositoryUrl": {
+            "type": "string",
+            "metadata": {
+                "description": "The JDBC URL for the admin repository"
+            }
+        },
+        "adminRepositoryUsername": {
+            "type": "string",
+            "metadata": {
+                "description": "The username for the admin repository user"
+            }
+        },
+        "adminRepositoryConnectionUsername": {
+            "type": "string",
+            "metadata": {
+                "description": "If your database connection requires a hostname as part of the username - eg - myuser@hostname, enter the username including the hostname here; otherwise leave blank."
+            }
+        },
+        "adminRepositoryPassword": {
+            "type": "securestring",
+            "metadata": {
+                "description": "The password for the admin repository user"
+            }
+        },
+        "agentCount": {
+            "defaultValue": 3,
+            "minValue": 1,
+            "maxValue": 50,
+            "type": "int",
+            "metadata": {
+                "description": "The number of agent nodes for the cluster."
+            }
+        },
+        "agentDiskSizeGB": {
+            "defaultValue": 40,
+            "minValue": 30,
+            "maxValue": 1023,
+            "type": "int",
+            "metadata": {
+                "description": "Disk size (in GB) to provision for each of the agent pool nodes. This value ranges from 30 to 1023."
+            }
+        },
+        "agentNodesSubnet": {
+            "type": "string",
+            "defaultValue": "10.0.1.0/24",
+            "metadata": {
+                "description": "The subnet prefix for the Kubernetes agent nodes"
+            }
+        },
+        "agentRepositoryUrl": {
+            "type": "string",
+            "metadata": {
+                "description": "The JDBC URL for the agent repository"
+            }
+        },
+        "agentRepositoryUsername": {
+            "type": "string",
+            "metadata": {
+                "description": "The username for the agent repository user"
+            }
+        },
+        "agentRepositoryConnectionUsername": {
+            "type": "string",
+            "metadata": {
+                "description": "If your database connection requires a hostname as part of the username - eg - myuser@hostname, enter the username including the hostname here; otherwise leave blank."
+            }
+        },
+        "agentRepositoryPassword": {
+            "type": "securestring",
+            "metadata": {
+                "description": "The password for the agent repository user"
+            }
+        },
+        "agentVMSize": {
+            "defaultValue": "Standard_D3_v2",
+            "allowedValues": [
+                "Standard_A0",
+                "Standard_A1",
+                "Standard_A10",
+                "Standard_A11",
+                "Standard_A1_v2",
+                "Standard_A2",
+                "Standard_A2_v2",
+                "Standard_A2m_v2",
+                "Standard_A3",
+                "Standard_A4",
+                "Standard_A4_v2",
+                "Standard_A4m_v2",
+                "Standard_A5",
+                "Standard_A6",
+                "Standard_A7",
+                "Standard_A8",
+                "Standard_A8_v2",
+                "Standard_A8m_v2",
+                "Standard_A9",
+                "Standard_B1ms",
+                "Standard_B1s",
+                "Standard_B2ms",
+                "Standard_B2s",
+                "Standard_B4ms",
+                "Standard_B8ms",
+                "Standard_D1",
+                "Standard_D11",
+                "Standard_D11_v2",
+                "Standard_D11_v2_Promo",
+                "Standard_D12",
+                "Standard_D12_v2",
+                "Standard_D12_v2_Promo",
+                "Standard_D13",
+                "Standard_D13_v2",
+                "Standard_D13_v2_Promo",
+                "Standard_D14",
+                "Standard_D14_v2",
+                "Standard_D14_v2_Promo",
+                "Standard_D15_v2",
+                "Standard_D16_v3",
+                "Standard_D16s_v3",
+                "Standard_D1_v2",
+                "Standard_D2",
+                "Standard_D2_v2",
+                "Standard_D2_v2_Promo",
+                "Standard_D2_v3",
+                "Standard_D2s_v3",
+                "Standard_D3",
+                "Standard_D32_v3",
+                "Standard_D32s_v3",
+                "Standard_D3_v2",
+                "Standard_D3_v2_Promo",
+                "Standard_D4",
+                "Standard_D4_v2",
+                "Standard_D4_v2_Promo",
+                "Standard_D4_v3",
+                "Standard_D4s_v3",
+                "Standard_D5_v2",
+                "Standard_D5_v2_Promo",
+                "Standard_D64_v3",
+                "Standard_D64s_v3",
+                "Standard_D8_v3",
+                "Standard_D8s_v3",
+                "Standard_DS1",
+                "Standard_DS11",
+                "Standard_DS11-1_v2",
+                "Standard_DS11_v2",
+                "Standard_DS11_v2_Promo",
+                "Standard_DS12",
+                "Standard_DS12-1_v2",
+                "Standard_DS12-2_v2",
+                "Standard_DS12_v2",
+                "Standard_DS12_v2_Promo",
+                "Standard_DS13",
+                "Standard_DS13-2_v2",
+                "Standard_DS13-4_v2",
+                "Standard_DS13_v2",
+                "Standard_DS13_v2_Promo",
+                "Standard_DS14",
+                "Standard_DS14-4_v2",
+                "Standard_DS14-8_v2",
+                "Standard_DS14_v2",
+                "Standard_DS14_v2_Promo",
+                "Standard_DS15_v2",
+                "Standard_DS1_v2",
+                "Standard_DS2",
+                "Standard_DS2_v2",
+                "Standard_DS2_v2_Promo",
+                "Standard_DS3",
+                "Standard_DS3_v2",
+                "Standard_DS3_v2_Promo",
+                "Standard_DS4",
+                "Standard_DS4_v2",
+                "Standard_DS4_v2_Promo",
+                "Standard_DS5_v2",
+                "Standard_DS5_v2_Promo",
+                "Standard_E16-4s_v3",
+                "Standard_E16-8s_v3",
+                "Standard_E16_v3",
+                "Standard_E16s_v3",
+                "Standard_E2_v3",
+                "Standard_E2s_v3",
+                "Standard_E32-16s_v3",
+                "Standard_E32-8s_v3",
+                "Standard_E32_v3",
+                "Standard_E32s_v3",
+                "Standard_E4-2s_v3",
+                "Standard_E4_v3",
+                "Standard_E4s_v3",
+                "Standard_E64-16s_v3",
+                "Standard_E64-32s_v3",
+                "Standard_E64_v3",
+                "Standard_E64i_v3",
+                "Standard_E64is_v3",
+                "Standard_E64s_v3",
+                "Standard_E8-2s_v3",
+                "Standard_E8-4s_v3",
+                "Standard_E8_v3",
+                "Standard_E8s_v3",
+                "Standard_F1",
+                "Standard_F16",
+                "Standard_F16s",
+                "Standard_F16s_v2",
+                "Standard_F1s",
+                "Standard_F2",
+                "Standard_F2s",
+                "Standard_F2s_v2",
+                "Standard_F32s_v2",
+                "Standard_F4",
+                "Standard_F4s",
+                "Standard_F4s_v2",
+                "Standard_F64s_v2",
+                "Standard_F72s_v2",
+                "Standard_F8",
+                "Standard_F8s",
+                "Standard_F8s_v2",
+                "Standard_G1",
+                "Standard_G2",
+                "Standard_G3",
+                "Standard_G4",
+                "Standard_G5",
+                "Standard_GS1",
+                "Standard_GS2",
+                "Standard_GS3",
+                "Standard_GS4",
+                "Standard_GS4-4",
+                "Standard_GS4-8",
+                "Standard_GS5",
+                "Standard_GS5-16",
+                "Standard_GS5-8",
+                "Standard_H16",
+                "Standard_H16m",
+                "Standard_H16mr",
+                "Standard_H16r",
+                "Standard_H8",
+                "Standard_H8m",
+                "Standard_L16s",
+                "Standard_L16s_v2",
+                "Standard_L32s",
+                "Standard_L4s",
+                "Standard_L8s",
+                "Standard_L8s_v2",
+                "Standard_M128",
+                "Standard_M128-32ms",
+                "Standard_M128-64ms",
+                "Standard_M128m",
+                "Standard_M128ms",
+                "Standard_M128s",
+                "Standard_M16-4ms",
+                "Standard_M16-8ms",
+                "Standard_M16ms",
+                "Standard_M32-16ms",
+                "Standard_M32-8ms",
+                "Standard_M32ls",
+                "Standard_M32ms",
+                "Standard_M32ts",
+                "Standard_M64",
+                "Standard_M64-16ms",
+                "Standard_M64-32ms",
+                "Standard_M64ls",
+                "Standard_M64m",
+                "Standard_M64ms",
+                "Standard_M64s",
+                "Standard_M8-2ms",
+                "Standard_M8-4ms",
+                "Standard_M8ms",
+                "Standard_NC12",
+                "Standard_NC12s_v2",
+                "Standard_NC12s_v3",
+                "Standard_NC24",
+                "Standard_NC24r",
+                "Standard_NC24rs_v2",
+                "Standard_NC24rs_v3",
+                "Standard_NC24s_v2",
+                "Standard_NC24s_v3",
+                "Standard_NC6",
+                "Standard_NC6s_v2",
+                "Standard_NC6s_v3",
+                "Standard_ND12s",
+                "Standard_ND24rs",
+                "Standard_ND24s",
+                "Standard_ND6s",
+                "Standard_NV12",
+                "Standard_NV24",
+                "Standard_NV6"
+            ],
+            "type": "string",
+            "metadata": {
+                "description": "The size of the Virtual Machine."
+            }
+        },
+        "applicationGatewaySubnet": {
+            "type": "string",
+            "defaultValue": "10.0.0.0/24",
+            "metadata": {
+                "description": "The subnet prefix for the Application Gateway"
+            }
+        },
+        "servicePrincipalAppId": {
+            "type": "string",
+            "metadata": {
+                "description": "appId of the service principal. Used by AKS to manage AKS related resources on Azure like vms, subnets."
+            }
+        },
+        "servicePrincipalName": {
+            "type": "string",
+            "metadata": {
+                "description": "Name of the service principal. Used by AKS to manage AKS related resources on Azure like vms, subnets."
+            }
+        },
+        "servicePrincipalClientSecret": {
+            "type": "securestring",
+            "metadata": {
+                "description": "Password for the service principal. Used by AKS to manage AKS related resources on Azure like vms, subnets."
+            }
+        },
+        "servicePrincipalObjectId": {
+            "type": "string",
+            "metadata": {
+                "description": "ObjectId of the service principal. Used by AKS to manage AKS related resources on Azure like vms, subnets."
+            }
+        },
+        "servicePrincipalTenant": {
+            "type": "string",
+            "metadata": {
+                "description": "Tenant of the service principal. Used by AKS to manage AKS related resources on Azure like vms, subnets."
+            }
+        }
+    },
+    "functions": [],
+    "variables": {
+        "bseeVersion": "2020.11-5632",
+        "containerRegistry": "",
+        "contributorRole": "[concat('/subscriptions/', subscription().subscriptionId, '/providers/Microsoft.Authorization/roleDefinitions/', 'b24988ac-6180-42a0-ab88-20f7382dd24c')]",
+        "deploymentContainerImage": "[concat('portswigger/deployment-container-azure:', variables('bseeVersion'))]",
+        "roleAssignmentGuid": "[guid(resourceGroup().id, 'serviceprincipalrgaccess')]"
+    },
+    "resources": [
+        {
+            "type": "Microsoft.Authorization/roleAssignments",
+            "apiVersion": "2017-05-01",
+            "name": "[variables('roleAssignmentGuid')]",
+            "properties": {
+                "roleDefinitionId": "[variables('contributorRole')]",
+                "principalId": "[parameters('servicePrincipalObjectId')]",
+                "scope": "[resourceGroup().id]"
+            }
+        },
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "2019-10-01",
+            "dependsOn": [
+                "[resourceId('Microsoft.Authorization/roleAssignments', variables('roleAssignmentGuid'))]"
+            ],
+            "name": "infrastructure",
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(deployment().properties.templateLink.uri, 'infrastructure-2020.11-5632.json')]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "addressSpaces": {
+                        "value": "[parameters('addressSpaces')]"
+                    },
+                    "applicationGatewaySubnet": {
+                        "value": "[parameters('applicationGatewaySubnet')]"
+                    },
+                    "agentNodesSubnet": {
+                        "value": "[parameters('agentNodesSubnet')]"
+                    },
+                    "agentCount": {
+                        "value": "[parameters('agentCount')]"
+                    },
+                    "agentDiskSizeGB": {
+                        "value": "[parameters('agentDiskSizeGB')]"
+                    },
+                    "agentVMSize": {
+                        "value": "[parameters('agentVMSize')]"
+                    },
+                    "servicePrincipalAppId": {
+                        "value": "[parameters('servicePrincipalAppId')]"
+                    },
+                    "servicePrincipalClientSecret": {
+                        "value": "[parameters('servicePrincipalClientSecret')]"
+                    },
+                    "servicePrincipalObjectId": {
+                        "value": "[parameters('servicePrincipalObjectId')]"
+                    }
+                }
+            }
+        },
+        {
+            "name": "application",
+            "type": "Microsoft.ContainerInstance/containerGroups",
+            "apiVersion": "2018-10-01",
+            "location": "[resourceGroup().location]",
+            "properties": {
+                "containers": [
+                    {
+                        "name": "bseedeploy",
+                        "properties": {
+                            "image": "[variables('deploymentContainerImage')]",
+                            "environmentVariables": [
+                                {
+                                    "name": "AZURE_RESOURCE_GROUP",
+                                    "value": "[resourceGroup().name]"
+                                },
+                                {
+                                    "name": "AZURE_DEPLOYMENT_NAME",
+                                    "value": "infrastructure"
+                                },
+                                {
+                                    "name": "BSEE_RELEASE_VERSION",
+                                    "value": "[variables('bseeVersion')]"
+                                },
+                                {
+                                    "name": "BSEE_AGENT_REPOSITORY_PASSWORD",
+                                    "value": "[parameters('agentRepositoryPassword')]"
+                                },
+                                {
+                                    "name": "BSEE_AGENT_REPOSITORY_USERNAME",
+                                    "value": "[parameters('agentRepositoryUsername')]"
+                                },
+                                {
+                                    "name": "BSEE_AGENT_REPOSITORY_CONNECTION_USERNAME",
+                                    "value": "[parameters('agentRepositoryConnectionUsername')]"
+                                },
+                                {
+                                    "name": "BSEE_ADMIN_REPOSITORY_USERNAME",
+                                    "value": "[parameters('adminRepositoryUsername')]"
+                                },
+                                {
+                                    "name": "BSEE_ADMIN_REPOSITORY_CONNECTION_USERNAME",
+                                    "value": "[parameters('adminRepositoryConnectionUsername')]"
+                                },
+                                {
+                                    "name": "BSEE_ADMIN_REPOSITORY_PASSWORD",
+                                    "value": "[parameters('adminRepositoryPassword')]"
+                                },
+                                {
+                                    "name": "BSEE_ENTERPRISE_SERVER_KEYSTORE_PASSWORD",
+                                    "value": "keystorepassword"
+                                },
+                                {
+                                    "name": "BSEE_WEB_SERVER_KEYSTORE_PASSWORD",
+                                    "value": "keystorepassword"
+                                },
+                                {
+                                    "name": "BSEE_ENTERPRISE_AGENT_KEYSTORE_PASSWORD",
+                                    "value": "keystorepassword"
+                                },
+                                {
+                                    "name": "BSEE_CLIENT_KEYSTORE_PASSWORD",
+                                    "value": "keystorepassword"
+                                },
+                                {
+                                    "name": "BSEE_CLIENT_TRUSTSTORE_PASSWORD",
+                                    "value": "keystorepassword"
+                                },
+                                {
+                                    "name": "BSEE_ADMIN_REPOSITORY_URL",
+                                    "value": "[parameters('adminRepositoryUrl')]"
+                                },
+                                {
+                                    "name": "BSEE_AGENT_REPOSITORY_URL",
+                                    "value": "[parameters('agentRepositoryUrl')]"
+                                },
+                                {
+                                    "name": "BSEE_DB_CONNECTION_IDLE_TIMEOUT",
+                                    "value": "600000"
+                                },
+                                {
+                                    "name": "BSEE_DB_CONNECTION_MAX_LIFETIME_TIMEOUT",
+                                    "value": "1200000"
+                                },
+                                {
+                                    "name": "BSEE_CLOUD_PROVIDER",
+                                    "value": "Azure"
+                                },
+                                {
+                                    "name": "BSEE_NUMBER_OF_AGENTS",
+                                    "value": "1"
+                                },
+                                {
+                                    "name": "BSEE_ADMIN_USERNAME",
+                                    "value": "[parameters('adminUsername')]"
+                                },
+                                {
+                                    "name": "BSEE_ADMIN_PASSWORD",
+                                    "value": "[parameters('adminPassword')]"
+                                },
+                                {
+                                    "name": "BSEE_ADMIN_EMAIL",
+                                    "value": "[parameters('adminEmail')]"
+                                },
+                                {
+                                    "name": "BSEE_CONTAINER_REGISTRY",
+                                    "value": "[variables('containerRegistry')]"
+                                },
+                                {
+                                    "name": "AZURE_SERVICE_PRINCIPAL_NAME",
+                                    "value": "[parameters('servicePrincipalName')]"
+                                },
+                                {
+                                    "name": "AZURE_SERVICE_PRINCIPAL_SECRET",
+                                    "value": "[parameters('servicePrincipalClientSecret')]"
+                                },
+                                {
+                                    "name": "AZURE_SERVICE_PRINCIPAL_TENANT",
+                                    "value": "[parameters('servicePrincipalTenant')]"
+                                }
+                            ],
+                            "resources": {
+                                "requests": {
+                                    "cpu": "1.0",
+                                    "memoryInGb": "2.0"
+                                }
+                            }
+                        }
+                    }
+                ],
+                "osType": "Linux",
+                "restartPolicy": "Never"
+            },
+            "dependsOn": [
+                "infrastructure"
+            ]
+        }
+    ],
+    "outputs": {
+        "applicationGatewayName": {
+            "type": "string",
+            "value": "[reference('infrastructure').outputs.applicationGatewayName.value]"
+        }
+    }
+}
